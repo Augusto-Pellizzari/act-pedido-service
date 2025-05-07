@@ -2,19 +2,19 @@ spring:
   application:
     name: loja-online-pedido-be
 
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/loja
+    url: jdbc:postgresql://loja-postgres:5432/loja
     username: postgres
     password: 123456
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
 
 logging:
   level:

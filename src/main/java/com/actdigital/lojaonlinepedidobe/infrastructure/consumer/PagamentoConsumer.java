@@ -21,10 +21,17 @@ public class PagamentoConsumer {
             containerFactory = "rabbitListenerContainerFactory"
     )
     public void receberPagamentoConfirmado(PagamentoConfirmadoEvent event) {
-        pedidoService.atualizarStatus(
-                event.getPedidoId(),
-                StatusPedido.valueOf(event.getStatus())
-        );
-        log.debug("Pedido {} atualizado para {}", event.getPedidoId(), event.getStatus());
+        StatusPedido novoStatus;
+        if ("CONFIRMADO".equalsIgnoreCase(event.getStatus())) {
+            novoStatus = StatusPedido.PAGO;
+        } else if ("RECUSADO".equalsIgnoreCase(event.getStatus())) {
+            novoStatus = StatusPedido.RECUSADO;
+        } else {
+            log.warn("Status de pagamento desconhecido='{}', marcando como RECUSADO", event.getStatus());
+            novoStatus = StatusPedido.RECUSADO;
+        }
+
+        pedidoService.atualizarStatus(event.getPedidoId(), novoStatus);
+        log.info("Pedido {} atualizado para {}", event.getPedidoId(), novoStatus);
     }
 }
